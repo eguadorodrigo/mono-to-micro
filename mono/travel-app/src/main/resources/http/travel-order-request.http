@@ -1,0 +1,13 @@
+### LIST ALL ORDERS
+GET http://localhost:8080/order
+
+### LIST ORDER BY ID
+GET http://localhost:8080/order/findById?id=1
+
+### CREATE A ORDER
+POST http://localhost:8080/order
+Content-Type: application/json
+
+{
+  "id": 1
+}
