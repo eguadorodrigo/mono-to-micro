@@ -1,5 +1,9 @@
 package br.com.github.eguadorodrigo.order;
 
+import br.com.github.eguadorodrigo.flight.FlightDTO;
+import br.com.github.eguadorodrigo.flight.FlightResource;
+import br.com.github.eguadorodrigo.hotel.HotelDTO;
+import br.com.github.eguadorodrigo.hotel.HotelResource;
 import br.com.github.eguadorodrigo.mapper.TravelOrderMapper;
 import br.com.github.eguadorodrigo.repository.TravelOrderRepository;
 import jakarta.inject.Inject;
@@ -19,17 +23,26 @@ import java.util.stream.Collectors;
 public class TravelOrderResource {
 
     @Inject
-    TravelOrderMapper travelOrderMapper;
+    TravelOrderMapper mapper;
 
     @Inject
     TravelOrderRepository repository;
+
+    @Inject
+    FlightResource flightResource;
+
+    @Inject
+    HotelResource hotelResource;
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<TravelOrderDTO> listAll() {
         List<TravelOrderEntity> travels = repository.listAll();
         return travels
                 .stream()
-                .map(travelOrderMapper::toDTO)
+                .map(order -> new TravelOrderDTO(order.id,
+                        flightResource.findById(order.id),
+                        hotelResource.findById(order.id)))
                 .collect(Collectors.toList());
     }
 
@@ -37,7 +50,7 @@ public class TravelOrderResource {
     @Path("findById")
     @Produces(MediaType.APPLICATION_JSON)
     public TravelOrderDTO findById(@QueryParam("id") long id){
-        return travelOrderMapper.toDTO(repository.findById(id));
+        return mapper.toDTO(repository.findById(id));
     }
 
     @POST
@@ -47,10 +60,10 @@ public class TravelOrderResource {
     public TravelOrderDTO create(TravelOrderDTO dto){
         TravelOrderEntity travelOrder = new TravelOrderEntity();
         travelOrder.id = null;
-
-        repository.persist(travelOrder);
-
-        return travelOrderMapper.toDTO(travelOrder);
+        travelOrder.persist();
+        flightResource.create(new FlightDTO(null, travelOrder.id, dto.flight().fromAirport(), dto.flight().toAirport()));
+        hotelResource.create(new HotelDTO(null, travelOrder.id, dto.hotel().nights()));
+        return mapper.toDTO(travelOrder);
     }
 
 }
