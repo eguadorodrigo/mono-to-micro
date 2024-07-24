@@ -1,7 +1,5 @@
 package br.com.eguadorodrigo.service;
 
-import br.com.eguadorodrigo.service.dto.FlightDTO;
-
 import java.util.List;
 
 public interface AbstractResourceClient<T>{

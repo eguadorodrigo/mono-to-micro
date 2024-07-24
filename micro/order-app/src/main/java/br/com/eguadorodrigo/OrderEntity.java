@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name="travel_order")
-public class TravelOrderEntity extends PanacheEntityBase {
+public class OrderEntity extends PanacheEntityBase {
 
     @Id
     @SequenceGenerator(

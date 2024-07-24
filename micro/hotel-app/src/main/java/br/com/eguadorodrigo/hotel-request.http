@@ -1,0 +1,14 @@
+### LIST ALL FLIGHTS
+GET http://localhost:8080/hotel
+
+### LIST FLIGHT BY ID
+GET http://localhost:8080/hotel/findById?id=1
+
+### CREATE A FLIGHT
+POST http://localhost:8080/hotel
+Content-Type: application/json
+
+{
+  "travelOrderId": 1,
+  "nights": 3
+}

@@ -2,12 +2,8 @@ package br.com.eguadorodrigo;
 
 import br.com.eguadorodrigo.service.FlightResourceClient;
 import br.com.eguadorodrigo.service.HotelResourceClient;
-import br.com.github.eguadorodrigo.flight.FlightDTO;
-import br.com.github.eguadorodrigo.flight.FlightResource;
-import br.com.github.eguadorodrigo.hotel.HotelDTO;
-import br.com.github.eguadorodrigo.hotel.HotelResource;
-import br.com.github.eguadorodrigo.mapper.TravelOrderMapper;
-import br.com.github.eguadorodrigo.repository.TravelOrderRepository;
+import br.com.eguadorodrigo.service.dto.FlightDTO;
+import br.com.eguadorodrigo.service.dto.HotelDTO;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
@@ -22,13 +18,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Path("/order")
-public class TravelOrderResource {
+public class OrderResource {
 
     @Inject
-    TravelOrderMapper mapper;
+    OrderMapper mapper;
 
     @Inject
-    TravelOrderRepository repository;
+    OrderRepository repository;
 
     @Inject
     FlightResourceClient flightResource;
@@ -38,20 +34,20 @@ public class TravelOrderResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<TravelOrderDTO> listAll() {
-        List<TravelOrderEntity> travels = repository.listAll();
+    public List<OrderDTO> listAll() {
+        List<OrderEntity> travels = repository.listAll();
         return travels
                 .stream()
-                .map(order -> new TravelOrderDTO(order.id,
-                        flightResource.findById(order.id),
-                        hotelResource.findById(order.id)))
+                .map(order -> new OrderDTO(order.id,
+                        flightResource.findByOrder(order.id),
+                        hotelResource.findByOrder(order.id)))
                 .collect(Collectors.toList());
     }
 
     @GET
     @Path("findById")
     @Produces(MediaType.APPLICATION_JSON)
-    public TravelOrderDTO findById(@QueryParam("id") long id){
+    public OrderDTO findById(@QueryParam("id") long id){
         return mapper.toDTO(repository.findById(id));
     }
 
@@ -59,8 +55,8 @@ public class TravelOrderResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public TravelOrderDTO create(TravelOrderDTO dto){
-        TravelOrderEntity travelOrder = new TravelOrderEntity();
+    public OrderDTO create(OrderDTO dto){
+        OrderEntity travelOrder = new OrderEntity();
         travelOrder.id = null;
         travelOrder.persist();
         flightResource.create(new FlightDTO(null, travelOrder.id, dto.flight().fromAirport(), dto.flight().toAirport()));

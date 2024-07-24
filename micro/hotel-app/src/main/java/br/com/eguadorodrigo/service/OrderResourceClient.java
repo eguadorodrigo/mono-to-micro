@@ -1,7 +1,6 @@
 package br.com.eguadorodrigo.service;
 
-import br.com.eguadorodrigo.service.dto.FlightDTO;
-import jakarta.ws.rs.Consumes;
+import br.com.eguadorodrigo.service.dto.OrderDTO;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -12,30 +11,30 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import java.util.List;
 
-@Path("flight")
+@Path("/order")
 @RegisterRestClient
-public interface FlightResourceClient extends AbstractResourceClient<FlightDTO>{
+public interface OrderResourceClient extends AbstractResourceClient<OrderDTO>{
 
     @Override
     @Path("/")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    List<FlightDTO> findAll();
+    List<OrderDTO> findAll();
 
     @Override
-    @Path("findById")
+    @Path("/findById")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    FlightDTO findById(@QueryParam("id") Long id);
+    OrderDTO findById(@QueryParam("id") Long id);
 
     @Path("findByOrder")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    FlightDTO findByOrder(@QueryParam("orderId") Long orderId);
+    OrderDTO findByOrder(@QueryParam("orderId") Long orderId);
 
     @Override
     @Path("/")
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    void create(FlightDTO dto);
+    @Produces(MediaType.APPLICATION_JSON)
+    void create(OrderDTO dto);
 }
