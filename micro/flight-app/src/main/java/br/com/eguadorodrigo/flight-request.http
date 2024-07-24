@@ -1,0 +1,16 @@
+### LIST ALL FLIGHTS
+GET http://localhost:8081/flight
+
+### LIST FLIGHT BY ID
+GET http://localhost:8081/flight/findById?id=1
+
+### CREATE A FLIGHT
+POST http://localhost:8081/flight
+Content-Type: application/json
+
+{
+  "id": 1,
+  "travelOrderId": 2,
+  "fromAirport": "GRL",
+  "toAirport": "BEL"
+}

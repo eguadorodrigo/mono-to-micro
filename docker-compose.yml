@@ -1,0 +1,6 @@
+services:
+  sonar:
+    image: sonarqube
+    container_name: sonarqube-local
+    ports:
+      - 9000:9000
